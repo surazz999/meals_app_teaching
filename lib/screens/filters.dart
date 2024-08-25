@@ -20,10 +20,11 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeFilterSet = widget.currentFilters[Filter.glutenFree]!;
-    _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
-    _vegetarianFilterSet = widget.currentFilters[Filter.vegetarian]!;
-    _veganFilterSet = widget.currentFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersProvider);
+    _glutenFreeFilterSet = activeFilters[Filter.glutenFree]!;
+    _lactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+    _vegetarianFilterSet = activeFilters[Filter.vegetarian]!;
+    _veganFilterSet = activeFilters[Filter.vegan]!;
   }
 
   @override
@@ -41,12 +42,14 @@ class _FiltersScreenState extends ConsumerState<FiltersScreen> {
       // }),
       body: WillPopScope(
         onWillPop: () async {
-          ref.read(filtersProvider.notifier).setFilter( Filter.glutenFree: _glutenFreeFilterSet,
+          ref.read(filtersProvider.notifier).setFilters({
+            Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
-            Filter.vegan: _veganFilterSet,);
+            Filter.vegan: _veganFilterSet,
+          });
           return true;
-      
+          //Navigator.of(context).pop();
         },
         child: Column(
           children: [
